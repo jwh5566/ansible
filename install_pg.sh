@@ -9,6 +9,5 @@ make install
 adduser postgres
 mkdir /home/postgres/data
 chown postgres /home/postgres/data
-su - postgres
-/usr/local/pgsql/bin/initdb --encoding=utf8  -D /home/postgres/data
-/usr/local/pgsql/bin/postgres -D /home/postgres/data >logfile 2>&1 &
+su - postgres -c "/usr/local/pgsql/bin/initdb --encoding=utf8  -D /home/postgres/data"
+su - postgres -c "/usr/local/pgsql/bin/postgres -D /home/postgres/data >logfile 2>&1 &"
