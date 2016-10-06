@@ -1,0 +1,10 @@
+---
+- hosts: test
+  tasks:
+  - name: restart redis
+    command: /home/wboss/wboss_app/bin/restart_redis.sh
+    become: true
+    become_user: wboss
+
+  - nmae: restart wboss_web
+    command: /home/wboss/wboss_app/bin/restart_web.sh a
