@@ -1,0 +1,5 @@
+---
+- hosts: test
+  tasks:
+  - name: copy postgresql
+    copy: "src=postgresql-9.3.10.tar.gz dest=/root/postgresql-9.3.10.tar.gz"
