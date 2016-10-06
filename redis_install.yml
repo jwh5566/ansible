@@ -9,4 +9,4 @@
   - name: copy shell script
     copy: "src=install_redis.sh dest=/home/wboss/install_redis.sh mode=0777"
   - name: excute shell script
-    command: bash /home/wboss/install_redis.sh
+    command: /home/wboss/install_redis.sh
