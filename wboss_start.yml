@@ -6,7 +6,7 @@
     become: true
     become_user: wboss
 
-  - nmae: restart wboss_web
+  - name: restart wboss_web
     command: /home/wboss/wboss_app/bin/restart_web.sh a
     become: true
     become_user: wboss
