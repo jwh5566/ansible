@@ -1,3 +1,3 @@
 #!/bin/bash
 #
-tar xf /home/wboss/jetty.tar.gz
+tar xf /home/wboss/jetty.tar.gz -C /home/wboss
