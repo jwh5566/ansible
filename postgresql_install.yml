@@ -3,3 +3,7 @@
   tasks:
   - name: copy postgresql
     copy: "src=postgresql-9.3.10.tar.gz dest=/root/postgresql-9.3.10.tar.gz"
+  - name: copy shell script
+    copy: "src=install_pg.sh dest=/root/install_pg.sh mode=0777"
+  - name: excute shell script
+    command: bash /root/install_pg.sh
