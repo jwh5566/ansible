@@ -1,0 +1,12 @@
+---
+- hosts: test
+  tasks:
+  - name: copy wboss_app
+    copy: "src=wboss_app.tar.gz dest=/home/wboss/wboss_app.tar.gz"
+    become: true
+    become_user: wboss
+
+  - name: copy shell script
+    copy: "src=install_wboss.sh dest=/home/wboss/install_wboss.sh mode=0777"
+  - name: excute shell script
+    command: /home/wboss/install_wboss.sh
