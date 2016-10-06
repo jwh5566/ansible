@@ -1,0 +1,12 @@
+---
+- hosts: test
+  tasks:
+  - name: copy jetty
+    copy: "src=jetty.tar.gz dest=/home/wboss/jetty.tar.gz"
+    become: true
+    become_user: wboss
+
+  - name: copy shell script
+    copy: "src=install_jetty.sh dest=/home/wboss/install_jetty.sh mode=0777"
+  - name: excute shell script
+    command: bash /home/wboss/install_jetty.sh
