@@ -4,3 +4,105 @@ https://github.com/geerlingguy/ansible-for-devops
 
 常用的服务器playbooks
 https://github.com/ansible/ansible-examples
+
+$ ansible example -m ping -u [username]
+
+
+[multi:vars]
+ansible_ssh_user=vagrant
+ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
+
+--forks 设置并发
+--list-hosts --check
+--remote-user=johndoe
+--ask-pass
+--extra-vars=VARS
+--connection=local
+--check
+
+限制运行的主机
+$ ansible app -s -a "service ntpd restart" --limit "192.168.60.4"
+
+# Limit hosts with a simple pattern (asterisk is a wildcard).
+$ ansible app -s -a "service ntpd restart" --limit "*.4"
+
+# Limit hosts with a regular expression (prefix with a tilde).
+$ ansible app -s -a "service ntpd restart" --limit ~".*\.4"
+
+Manage users and groups
+$ ansible app -s -m group -a "name=admin state=present"
+#The group module is pretty simple; you can remove a group by setting state=absent
+# , set a group id with gid=[gid] , and indicate that the group is a system group with system=yes
+
+$ ansible app -s -m user -a "name=johndoe group=admin createhome=yes"
+$ ansible app -s -m user -a "name=johndoe state=absent remove=yes"
+
+Manage files and directories
+
+Get information about a file
+$ ansible multi -m stat -a "path=/etc/environment"
+
+Copy a file to the servers
+$ ansible multi -m copy -a "src=/etc/hosts dest=/tmp/hosts"
+src包含斜杠的话，只有目录内容复制，没有的话，目录和内容一起复制
+
+copy模块适合单文件，小目录
+内部有很深的嵌套目录的话 适合
+you should consider either copying then expanding an archive of the files with Ansible’s unarchive module, or using Ansible’s synchronize module.
+
+Retrieve a file from the servers
+$ ansible multi -s -m fetch -a "src=/etc/hosts dest=/tmp"
+
+Create directories and files
+$ ansible multi -m file -a "dest=/tmp/test mode=644 state=directory"
+
+Delete directories and files
+$ ansible multi -m file -a "dest=/tmp/test state=absent"
+
+Manage cron jobs
+$ ansible multi -s -m cron -a "name='daily-cron-all-servers' \
+hour=4 job='/path/to/daily-script.sh'"
+
+$ ansible multi -s -m cron -a "name='daily-cron-all-servers' state=absent"
+
+
+其他
+$ ansible app -s -m git -a "repo=git://example.com/path/to/repo.git \
+dest=/opt/myapp update=yes version=1.2.4"
+
+
+
+Ansible’s SSH connection history
+
+加速openssh
+
+升级openssh 最新版
+注释掉/etc/sudoer Deaults requiretty
+/etc/ansible/ansible.cfg
+pipelining=True
+
+重启sshd 服务
+
+测试  提高至少3倍
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

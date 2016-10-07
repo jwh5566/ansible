@@ -1,0 +1,5 @@
+---
+- hosts: test
+  tasks:
+  - name: excute shell script
+    command: /home/wboss/deploy.sh

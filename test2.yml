@@ -1,0 +1,27 @@
+---
+- hosts: test
+  tasks:
+  - name: Install Apache
+    yum:  name={{ item }} state=present
+    with_items:
+    - httpd
+    - httpd-devel
+  - name: Copy Confgration files
+    copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: 0644
+    with_items:
+    - {
+      src:  "config/httpd.conf",
+      dest: "/etc/httpd/conf/httpd.conf"
+    }
+    - {
+      src:  "config/httpd-vhosts.conf",
+      dest: "/etc/httpd/conf/httpd-vhosts.conf"
+    }
+  - name: make sure apache is start
+    service: name=httpd state=started
+
