@@ -1,6 +1,6 @@
 ---
-- hosts: test
+- hosts: all
   gather_facts: False
   tasks:
   - name: test all hosts connectivity
-    yum:  name=zlib-devel state=present
+    yum:  echo "haha"
