@@ -19,6 +19,8 @@ ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
 --extra-vars=VARS
 --connection=local
 --check
+--force-handlers
+
 
 限制运行的主机
 $ ansible app -s -a "service ntpd restart" --limit "192.168.60.4"
@@ -86,14 +88,79 @@ pipelining=True
 测试  提高至少3倍
 
 
+- name: Install EPLE
+  command: "wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-6.repo"
 
 
+确保某文件包含某行
+- name: Enable upload progress via APC.
+75 lineinfile:
+76 dest: "/etc/php5/apache2/conf.d/20-apcu.ini"
+77 regexp: "^apc.rfc1867"
+78 line: "apc.rfc1867 = 1"
+79 state: present
+80 notify: restart apache
+
+- name: Check out drush master branch.
+95 git:
+96 repo: https://github.com/drush-ops/drush.git
+97 dest: /opt/drus
+
+- name: Download Solr.
+21 get_url:
+22 url: http://apache.osuosl.org/lucene/solr/4.9.1/solr-4.9.1.tgz
+23 dest: "{{ download_dir }}/solr-4.9.1.tgz"
+24 sha256sum: 4a546369a31d34b15bc4b99188984716bf4c0c158c0e337f3c1f98088aec70ee
+
+25 - name: Expand Solr.
+26 command: >
+27 tar -C /tmp -xvzf {{ download_dir }}/solr-4.9.1.tgz
+28 creates={{ download_dir }}/solr-4.9.1/dist/solr-4.9.1.war
 
 
+环境变量
 
+为远程账户设置变量，添加变量到用户的.bash_profile
+注意 只有shell模块可以使用这个变量
+- name: Add an environment variable to the remote user's shell.
+  lineinfile: dest=~/.bash_profile regexp=^ENV_VAR= line=ENV_VAR=value
 
+example：
+- name: Add an environment variable to the remote user's shell.
+2 lineinfile: dest=~/.bash_profile regexp=^ENV_VAR= line=ENV_VAR=value
+3
+4 - name: Get the value of the environment variable we just added.
+5 shell: 'source ~/.bash_profile && echo $ENV_VAR'
+6 register: foo
+7
+8 - name: Print the value of the environment variable.
+9 debug: msg="The variable is {{ foo.stdout }}"
 
+或者
+- name: Add a global environment variable.
+lineinfile: dest=/etc/environment regexp=^ENV_VAR= line=ENV_VAR=value
+sudo: yes
 
+一次性对于task的环境变量
+- name: Download a file, using example-proxy as a proxy.
+get_url: url=http://www.example.com/file.tar.gz dest=~/Downloads/
+environment:
+http_proxy: http://example-proxy:80/
+
+或者
+vars:
+var_proxy:
+http_proxy: http://example-proxy:80/
+https_proxy: https://example-proxy:443/
+[etc...]
+tasks:
+- name: Download a file, using example-proxy as a proxy.
+get_url: url=http://www.example.com/file.tar.gz dest=~/Downloads/
+environment: var_proxy
+
+查看远程变量
+
+ansible test -m shell -a 'echo $TEST'
 
 
 
