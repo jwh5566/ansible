@@ -1,0 +1,67 @@
+使用远程用户执行命令的话
+
+先在远程创建用户，其次复制ssh公钥到该用户的ssh目录下（密钥验证）
+
+AD-HOC：
+ansible test -m shell -a 'source ~/.bash_profile && echo $VAR'  -u wboss
+
+playbook：
+---
+- hosts: all
+  gather_facts: False
+  remote_user: wboss
+  tasks:
+  - name: test user
+    shell: touch ab.txt
+
+Variables:
+In an inventory file, a variable’s value is assigned using an equals sign:
+foo=bar
+
+In a playbook or variables include file, a variable’s value is assigned using a colon, like so:
+foo: bar
+
+Playbook Variables
+Variablescanbepassedinviathecommandline,whencalling ansible-playbook ,withthe --extra-vars option:
+ansible-playbook example.yml --extra-vars "foo=bar"
+
+或者可以传递json，ymal格式的文件
+like --extra-vars "@even_more_vars.json" or --extra-vars "@even_more_vars.yml
+
+在playbook中使用vars section:
+---
+2 - hosts: example
+3 vars:
+4 foo: bar
+5 tasks:
+6 # Prints "Variable 'foo' is set to bar".
+7 - debug: msg="Variable 'foo' is set to {{ foo }}"
+
+或者使用文件
+1 ---
+2 # Main playbook file.
+3 - hosts: example
+4 vars_files:
+5 - vars.yml
+6 tasks:
+7 - debug: msg="Variable 'foo' is set to {{ foo }}"
+
+Inventory variables
+1 # Host-specific variables (defined inline).
+2 [washington]
+3 app1.example.com proxy_state=present
+4 app2.example.com proxy_state=absent
+5
+6 # Variables defined for the entire group.
+7 [washington:vars]
+8 cdn_host=washington.static.example.com
+9 api_version=3.0.1
+
+变量优先级
+1. Variables from the command line ( -e in the command line) always win.
+2. Connection variables defined in inventory ( ansible_ssh_user , etc.).
+3. “Mosteverythingelse”(commandlineswitches,variablesdefinedinaplay,includedvariables,
+role variables, etc.).
+4. Other (non-connection) inventory variables.
+5. Local facts and automatically discovered facts (via gather_facts ).
+6. Role default variables (inside a role’s defaults/main.yml file).
