@@ -1,0 +1,21 @@
+---
+- hosts: all
+  user: root
+  tasks:
+  - name: 确保ansible用户存在
+    user:
+      name: ansible
+      state: present
+      comment:  Ansible   # 用户的描述信息
+  - name: 确保ansible用户接受ssh key
+    authorized_key:
+      user: ansible
+      key:  https://github.com/jwh5566/ansible/blob/master/fale.keys
+    state:  present
+  - name: 确保ansible用户sudo不用密码
+    lineinfile:
+      dest: /etc/sudoers
+      state:  present
+      regexp: '^ansible ALL\='
+      line: 'ansible ALL=(ALL) NOPASSWD:ALL'
+      validate: 'visudo -cf %s'
