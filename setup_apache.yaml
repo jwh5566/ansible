@@ -1,0 +1,15 @@
+---
+- hosts:  all
+  remote_user:  root
+  tasks:
+  - name: 确保httpd安装
+    yum:
+      name: httpd
+      state:  present
+      become: True
+  - name: 确保httpd启动
+      service:
+        name: httpd
+        state: started
+        enabled:  True
+        become: True

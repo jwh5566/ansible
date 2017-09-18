@@ -1,0 +1,18 @@
+---
+- hosts: test
+  vars:
+    dir: /home/falcon/open-falcon
+  tasks:
+  - name: 确保falcon目录存在
+    file: path={{ dir }} state=directory mode=0755
+
+  - name: 添加wboss用户
+    user: name=wboss
+
+  - name: 复制监控脚本
+    copy: src=/root/ansible/soft/wboss.monitor.tar dest={{ dir }}/wboss.monitor.tar
+
+  - name: 解压监控包
+    command:  tar xf {{ dir }}/wboss.monitor.tar -C {{ dir }}
+
+  - name:
